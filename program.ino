@@ -46,29 +46,52 @@ void setup() {
     position1 = EEPROM.read(0);         // the position of the step motor1
     position2 = EEPROM.read(1);         // the position of the step motor2
     position3 = EEPROM.read(2);         // the position of the step motor3
+    Serial.print("Position of the valve 1 is: ");
+    Serial.println(position1);
+    Serial.print("Position of the valve 2 is: ");
+    Serial.println(position2);
+    Serial.print("Position of the valve 3 is: ");
+    Serial.println(position3);
+    delay(3500);
 
 }
 
 void loop() {
+    
+    
+
+    
+}
+
+void opening(int DIR, int ENA, int PUL){
     for (int i=0; i<6400; i++)    //Forward 5000 steps
     {
-        digitalWrite(DIR1,LOW);
-        digitalWrite(ENA1,HIGH);
-        digitalWrite(PUL1,HIGH);
+        digitalWrite(DIR,LOW);
+        digitalWrite(ENA,HIGH);
+        digitalWrite(PUL,HIGH);
         delayMicroseconds(50);
-        digitalWrite(PUL1,LOW);
-        delayMicroseconds(50);
-    }
-    for (int i=0; i<6400; i++)   //Backward 5000 steps
-    {
-        digitalWrite(DIR1,HIGH);
-        digitalWrite(ENA1,HIGH);
-        digitalWrite(PUL1,HIGH);
-        delayMicroseconds(50);
-        digitalWrite(PUL1,LOW);
+        digitalWrite(PUL,LOW);
         delayMicroseconds(50);
     }
 }
 
+void closing(int DIR, int ENA, int PUL){
+    for (int i=0; i<6400; i++)   //Backward 5000 steps
+    {
+        digitalWrite(DIR,HIGH);
+        digitalWrite(ENA,HIGH);
+        digitalWrite(PUL,HIGH);
+        delayMicroseconds(50);
+        digitalWrite(PUL,LOW);
+        delayMicroseconds(50);
+    }
+}
 
+void save_value(int position){
+    // Save in the EEPROM the last position
+    EEPROM.write(0, position);
+    EEPROM.commit();
+    Serial.println("level saved in flash memory");
+    Serial.println(position1);
+}
 
