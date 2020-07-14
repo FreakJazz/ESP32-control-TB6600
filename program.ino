@@ -21,6 +21,7 @@
 int position1 = 0;   
 int position2 = 0;   
 int position3 = 0;   
+char data;
 
 void setup() {
     Serial.begin(115200);
@@ -57,10 +58,11 @@ void setup() {
 }
 
 void loop() {
-    
-    
-
-    
+    while(Serial.available()) {
+        data = Serial.read();
+        Serial.println(data);
+        delay(1000);
+    }
 }
 
 void opening(int DIR, int ENA, int PUL){
