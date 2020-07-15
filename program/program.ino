@@ -5,17 +5,17 @@
 #define EEPROM_SIZE 3
 
 // Define stepper motor 1 connections
-#define PUL1 7 //define Pulse pin
-#define DIR1 6 //define Direction pin
-#define ENA1 5 //define Enable Pin
+#define PUL1 34 //define Pulse pin
+#define DIR1 39 //define Direction pin
+#define ENA1 36 //define Enable Pin
 // Define stepper motor 2 connections
-#define PUL2 7 //define Pulse pin
-#define DIR2 6 //define Direction pin
-#define ENA2 5 //define Enable Pin
+#define PUL2 33 //define Pulse pin
+#define DIR2 32 //define Direction pin
+#define ENA2 35 //define Enable Pin
 // Define stepper motor 3 connections
-#define PUL3 7 //define Pulse pin
-#define DIR3 6 //define Direction pin
-#define ENA3 5 //define Enable Pin
+#define PUL3 27 //define Pulse pin
+#define DIR3 26 //define Direction pin
+#define ENA3 25 //define Enable Pin
 
 // Declarate the position of the motors
 int positions [EEPROM_SIZE]= {};   
