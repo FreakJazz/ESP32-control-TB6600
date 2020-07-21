@@ -9,21 +9,20 @@ Separador s;
 // Define stepper motor 1 connections
 #define PUL1 34 //define Pulse pin
 #define DIR1 39 //define Direction pin
-#define ENA1 36 //define Enable Pin
+
 // Define stepper motor 2 connections
 #define PUL2 33 //define Pulse pin
 #define DIR2 32 //define Direction pin
-#define ENA2 35 //define Enable Pin
+
 // Define stepper motor 3 connections
 #define PUL3 27 //define Pulse pin
 #define DIR3 26 //define Direction pin
-#define ENA3 25 //define Enable Pin
+
 
 // Declarate the position of the motors
 int positions [EEPROM_SIZE]= {};   
 int PUL;  //define Pulse pin
 int DIR;  //define Direction pin
-int ENA; //define Enable Pin
 int incomingByte = 0; // for incoming serial data
 
 void setup() {
@@ -36,17 +35,14 @@ void setup() {
     // configurate pins of the step motor 1 
     pinMode (PUL1, OUTPUT);
     pinMode (DIR1, OUTPUT);
-    pinMode (ENA1, OUTPUT);
 
     // configurate pins of the step motor 2
     pinMode (PUL2, OUTPUT);
     pinMode (DIR2, OUTPUT);
-    pinMode (ENA2, OUTPUT);
 
     // configurate pins of the step motor 3
     pinMode (PUL3, OUTPUT);
     pinMode (DIR3, OUTPUT);
-    pinMode (ENA3, OUTPUT);
 
     ///////////////// Configure valve 1 //////////////////
     //////////////////////////////////////////////////////
@@ -100,9 +96,9 @@ void loop() {
         Serial.println("The porcent is: "+ angle);
         int valve1  = valve.toInt()-1;
         int angle1  = angle.toInt();
-        give_position(valve1,positions[valve1],angle1)
+        posi_final = give_position(valve1,positions[valve1],angle1)
         // Save in the EEPROM the last position
-        EEPROM.write(valve1, angle1);
+        EEPROM.write(valve1, posi_final);
         EEPROM.commit();
         Serial.println("level saved in flash memory");
         Serial.println(valve1);
@@ -117,17 +113,14 @@ int give_position(int valve, int posi_actual, int posi_final){
     case 0:
         PUL  = PUL1;
         DIR  = DIR1;
-        ENA  = ENA1;
         break;
     case 1:
         PUL  = PUL2;
         DIR  = DIR2;
-        ENA  = ENA2;
         break;
     case 2:
         PUL  = PUL3;
         DIR  = DIR3;
-        ENA  = ENA3;
         break;
     
     default:
@@ -136,39 +129,44 @@ int give_position(int valve, int posi_actual, int posi_final){
 
     if (posi_actual > posi_final){
         //send PUL DIR ENA Position
-        closing(PUL, DIR, ENA, posi_final);
+        posi_final = closing(DIR, PUL, posi_final, posi_actual);
         Serial.Print("The valve is closing");
     }
     if (posi_actual > posi_final){
         //send PUL DIR ENA Position
-        opening(PUL, DIR, ENA, posi_final);
+        posi_final = opening(DIR, PUL, posi_final, posi_actual);
         Serial.Print("The valve is closing");
     }
     return posi_final;
 }
 
-void opening(int DIR, int ENA, int PUL, int posi_final){
-    for (int i=0; i<6400; i++)    //Forward 5000 steps
+int opening(int DIR, int PUL, int posi_final, int posi_actual){
+     Serial.print("The valve is openning");
+    while (posi_actual < posi_final)
     {
         digitalWrite(DIR,LOW);
-        digitalWrite(ENA,HIGH);
         digitalWrite(PUL,HIGH);
         delayMicroseconds(50);
         digitalWrite(PUL,LOW);
         delayMicroseconds(50);
+        posi_actual++;
     }
+    return posi_actual;
 }
 
-void closing(int DIR, int ENA, int PUL, int posi_final){
-    for (int i=0; i<6400; i++)   //Backward 5000 steps
+
+int closing(int DIR, int PUL, int posi_actual ,int posi_final, int posi_actual){
+     Serial.print("The valve is closing");
+     while (posi_actual > posi_final)
     {
         digitalWrite(DIR,HIGH);
-        digitalWrite(ENA,HIGH);
         digitalWrite(PUL,HIGH);
         delayMicroseconds(50);
         digitalWrite(PUL,LOW);
         delayMicroseconds(50);
+        posi_actual--;
     }
+    return posi_actual;
 }
 
 
