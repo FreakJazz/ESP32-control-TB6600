@@ -1,6 +1,8 @@
 // libraries that we use
 #include "EEPROM.h"
+#include "Separador.h"
 
+Separador s;
 // define the number of bytes you want to access
 #define EEPROM_SIZE 3
 
@@ -79,22 +81,35 @@ void setup() {
     EEPROM.commit();
     Serial.println();
     Serial.println("Positions are gotten");
+
+    Serial.println("Please enter the valve and angle of motion separated by a comma");
+  
     
     //delay(100);
 }
 
 void loop() {
 
-    // send data only when you receive data:
-  if (Serial.available() > 0) {
-    // read the incoming byte:
-    incomingByte = Serial.read();
-
-    // say what you got:
-    Serial.print("I received: ");
-    Serial.println(incomingByte, DEC);
-  }
-  
+        // send data only when you receive data:
+    if (Serial.available()) {
+        //Get data to the Serial
+        String get_data = Serial.readString();
+        String valve = s.separa(get_data,',',0);
+        String angle = s.separa(get_data,',',1);
+        Serial.println("The valve is: "+ valve);
+        Serial.println("The porcent is: "+ angle);
+        int valve1  = valve.toInt()-1;
+        int angle1  = angle.toInt();
+        give_position(valve1,positions[valve1],angle1)
+        // Save in the EEPROM the last position
+        EEPROM.write(valve1, angle1);
+        EEPROM.commit();
+        Serial.println("level saved in flash memory");
+        Serial.println(valve1);
+        Serial.println(angle1);
+        delay(500);
+        Serial.println("Please enter the valve and angle of motion separated by a comma");
+    } 
 }
 
 int give_position(int valve, int posi_actual, int posi_final){
@@ -122,10 +137,12 @@ int give_position(int valve, int posi_actual, int posi_final){
     if (posi_actual > posi_final){
         //send PUL DIR ENA Position
         closing(PUL, DIR, ENA, posi_final);
+        Serial.Print("The valve is closing");
     }
     if (posi_actual > posi_final){
         //send PUL DIR ENA Position
         opening(PUL, DIR, ENA, posi_final);
+        Serial.Print("The valve is closing");
     }
     return posi_final;
 }
@@ -154,11 +171,4 @@ void closing(int DIR, int ENA, int PUL, int posi_final){
     }
 }
 
-void save_value(int valve, int posi_actual){
-    // Save in the EEPROM the last position
-    EEPROM.write(valve, posi_actual);
-    EEPROM.commit();
-    Serial.println("level saved in flash memory");
-    Serial.println(posi_actual);
-}
 
