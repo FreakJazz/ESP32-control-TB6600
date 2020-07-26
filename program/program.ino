@@ -7,8 +7,8 @@ Separador s;
 #define EEPROM_SIZE 3
 
 // Define stepper motor 1 connections
-#define PUL1 35 //define Pulse pin
-#define DIR1 34 //define Direction pin
+#define PUL1 12 //define Pulse pin
+#define DIR1 14 //define Direction pin
 
 // Define stepper motor 2 connections
 #define PUL2 33 //define Pulse pin
