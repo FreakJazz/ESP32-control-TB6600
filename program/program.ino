@@ -11,12 +11,12 @@ Separador s;
 #define DIR1 14 //define Direction pin
 
 // Define stepper motor 2 connections
-#define PUL2 33 //define Pulse pin
-#define DIR2 32 //define Direction pin
+#define PUL2 26 //define Pulse pin
+#define DIR2 25 //define Direction pin
 
 // Define stepper motor 3 connections
-#define PUL3 26 //define Pulse pin
-#define DIR3 25 //define Direction pin
+#define PUL3 35 //define Pulse pin
+#define DIR3 34 //define Direction pin
 
 
 // Declarate the position of the motors

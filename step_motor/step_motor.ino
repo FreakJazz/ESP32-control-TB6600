@@ -1,7 +1,8 @@
-#include "EEPROM.h"
+
+#include <EEPROM.h>
 
 // define the number of bytes you want to access
-#define EEPROM_SIZE 1
+//#define EEPROM_SIZE 1
 
 // Define stepper motor 1 connections
 #define PUL1 3 //define Pulse pin
@@ -16,7 +17,7 @@ void setup() {
   Serial.begin(115200); // opens serial port, sets data rate to 9600 bps
   // initialize EEPROM with predefined size
   Serial.println("Start...");
-  EEPROM.begin(EEPROM_SIZE);
+  //EEPROM.begin(EEPROM_SIZE);
 
   a_valve = byte(EEPROM.read(0));
   Serial.print("Valve: ");
@@ -34,11 +35,13 @@ void loop() {
     Serial.println(incomingByte);
     int n_valve  = incomingByte.toInt();
     a_valve = give_position(a_valve,n_valve);
-    EEPROM.write(0, n_valve);
-    EEPROM.commit();
-    Serial.println("Level saved in memory, this is the actual position");
-    // Show the positions of the valve
+    EEPROM.update(0, n_valve);
+    //EEPROM.write(0, n_valve);
+    //EEPROM.commit();
     Serial.print("You change the position of the valve");
+    Serial.println("Level saved in memory, this is the actual position: ");
+    // Show the positions of the valve
+    Serial.print(a_valve);
     delay(500);
   }
 }
